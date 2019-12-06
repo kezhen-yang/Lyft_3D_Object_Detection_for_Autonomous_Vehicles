@@ -1,0 +1,51 @@
+## Use the first link to set up the instance (Do not use any of the commands provided in this article)
+https://medium.com/@sgwooduk/jupyterlab-analytics-on-google-cloud-platform-73a287222863
+https://www.tecmint.com/install-python-in-ubuntu/
+** Use Ubuntu 18 for python 3.6
+
+## Create an instance
+gcloud compute instances create gpu-try3 \    
+    --min-cpu-platform "Intel Broadwell" \    
+    --machine-type n1-standard-1 --zone us-west1-b \    
+    --boot-disk-size 500GB --boot-disk-type=pd-ssd\    
+    --accelerator type=nvidia-tesla-k80,count=1 \    
+    --image-family ubuntu-1804-lts --image-project ubuntu-os-cloud \               
+    --maintenance-policy TERMINATE --restart-on-failure \    
+    --metadata startup-script='#!/bin/bash 
+
+## In the SSH window
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt update
+sudo apt install python3.6
+source ~/.bashrc
+ls -l /usr/bin/python*
+python3 -V
+sudo apt install jupyter
+
+
+## To open jupyter notebook
+jupyter notebook --generate-config
+ls ~/.jupyter/jupyter_notebook_config.py
+jupyter notebook --ip=0.0.0.0 --port=5000 --no-browser &
+
+## For the LyftSDK
+!pip3 install lyft-dataset-sdk
+
+
+## For opencv
+sudo apt-get install -y libsm6 libxext6 libxrender-dev
+pip install opencv-python
+
+
+## Install Kaggle API and download
+Download the Kaggle API from kaggle.com, upload it to the insance via the SSH
+Open Jupyter notebook and create a folder called .kaggle  (it will be a hidden folder)
+Move the kaggle.json file to the folder with the command: 
+mv kaggle.json /home/alishafdes94/.kaggle/
+cd .kaggle/
+cd ../
+pip install kaggle
+
+kaggle competitions download -c 3d-object-detection-for-autonomous-vehicles
+OR
+~/.local/bin/kaggle competitions download -c 3d-object-detection-for-autonomous-vehicles
